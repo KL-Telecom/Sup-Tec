@@ -8,7 +8,7 @@
         
         body {
             font-family: Arial, sans-serif;
-            background-color: #addcef;
+            background-color: #ffffff;
             background-image: url('src/Grad.jpg');
             background-size: cover;
             background-position: center;
@@ -16,7 +16,7 @@
             background-attachment: fixed; 
             margin: 0;
             padding: 20px;
-            color: #343a40;
+            color: #ffffff;
             line-height: 1.6;
         }
         h1 {
@@ -95,19 +95,19 @@
         }
 
         /* Cores Temáticas por Aba - Mantidas e aprimoradas */
-        .tab-content#tab1 { background-color: #00ff44; border-top: 3px solid #02250a; }
-        .tab-links button[for="tab1"].active { color: #28a745; border-bottom-color: #28a745; }
-        .tab-content#tab2 { background-color: #0285f8; border-top: 3px solid #022347; }
-        .tab-links button[for="tab2"].active { color: #022347; border-bottom-color: #007bff; }
-        .tab-content#tab3 { background-color: #ffaa00; border-top: 3px solid #703301; }
-        .tab-links button[for="tab3"].active { color: #703301; border-bottom-color: #fd7e14; }
-        .tab-content#tab4 { background-color: #8800ff; border-top: 3px solid #20015a; }
-        .tab-links button[for="tab4"].active { color: #20015a; border-bottom-color: #6f42c1; }
+        .tab-content#tab1 { background-color: #f0fff4; border-top: 3px solid #28a745; }
+        .tab-links button[for="tab1"].active { color: #28a745; border-left-color: #28a745; }
+        .tab-content#tab2 { background-color: #f0f8ff; border-top: 3px solid #007bff; }
+        .tab-links button[for="tab2"].active { color: #007bff; border-left-color: #007bff; }
+        .tab-content#tab3 { background-color: #fffaf0; border-top: 3px solid #fd7e14; }
+        .tab-links button[for="tab3"].active { color: #fd7e14; border-left-color: #fd7e14; }
+        .tab-content#tab4 { background-color: #f8f0ff; border-top: 3px solid #6f42c1; }
+        .tab-links button[for="tab4"].active { color: #6f42c1; border-left-color: #6f42c1; }
 
         /* Galeria de PDFs - Mais robusta com grid */
         .pdf-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
         .pdf-card {
@@ -120,6 +120,8 @@
             opacity: 0;
             animation: fadeInCard 1s forwards;
             position: relative; /* Para fallback */
+            max-width: 800px; /*limita largura para não esticar demais*/
+            margin: 0 auto; /*centraliza*/
         }
         .pdf-card:hover {
             transform: translateY(-5px);
@@ -138,7 +140,7 @@
             border-radius: 8px;
             overflow: auto;
         }
-        .pdf-fullcreen {
+        .pdf-fullscreen {
             position: fixed;
             top: 5%;
             left: 5%;
@@ -149,20 +151,8 @@
             border: 2px solid #007bff;
             overflow: auto;
         }
-        .pdf-fullcreen .pdf-embed {
+        .pdf-fullscreen .pdf-embed {
             height: 90% !important;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 10px 20px;
-            background: #dc3545;
-            color: white; 
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1001;
         }
         @media (max-width: 768px) {
             .pdf-embed { height: 300px; }
@@ -182,28 +172,36 @@
         .maximize-btn:hover {
             background-color: #0056b3
         }
-        .pdf-fullcreen {
-            position: fixed;
+        .pdf-fullscreen {
+            position: fixed !important;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999 !important; /* Acima de tudo */
             background: white;
+            overflow: hidden; /* Sem scroll na tela cheia */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .pdf-fullscreen .pdf-embed {
-            height: 100% !important;
+            height: calc(100% - 60px) !important; /* Espaço para título e botão */
         }
-        .pdf-fullcreen .close-btn {
+        .pdf-fullscreen h3 {
+            margin-top: 0;
+        }
+        .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            padding: 10px;
+            padding: 10px 20px;
             background: #dc3545;
             color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;;
+            cursor: pointer;
+            z-index: 10000;
         }
 
         /* Fallback para PDFs que não carregam no iframe */
@@ -354,45 +352,54 @@
         </div>
     </div>
 
-    <!-- JavaScript para Abas Robustas (sem dependências externas) -->
+    <!-- JavaScript para Abas e Maximizar -->
     <script>
-    // JavaScript para Abas Robustas (mantido igual)
-    const tabs = document.querySelectorAll('.tab-links button');
-    const contents = document.querySelectorAll('.tab-content');
+        // JavaScript para Abas
+        const tabs = document.querySelectorAll('.tab-links button');
+        const contents = document.querySelectorAll('.tab-content');
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            contents.forEach(c => c.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tab.getAttribute('for')).classList.add('active');
-        });
-    });
-
-    // JavaScript para Maximizar PDFs (versão corrigida e mais robusta)
-    window.addEventListener('DOMContentLoaded', () => {
-        const maximizeBtns = document.querySelectorAll('.maximize-btn');
-        maximizeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const card = btn.closest('.pdf-card');
-                if (card) { // Verifica se encontrou o card (evita erros)
-                    card.classList.add('pdf-fullscreen');
-                    // Adiciona botão de fechar
-                    const closeBtn = document.createElement('button');
-                    closeBtn.classList.add('close-btn');
-                    closeBtn.textContent = 'Fechar';
-                    closeBtn.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Evita propagação de cliques
-                        card.classList.remove('pdf-fullscreen');
-                        closeBtn.remove();
-                    });
-                    card.appendChild(closeBtn);
-                } else {
-                    console.error('Card não encontrado para este botão.');
-                }
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.getAttribute('for')).classList.add('active');
             });
         });
-    });
-</script>
+
+        // JavaScript para Maximizar PDFs (corrigido para tela cheia)
+        window.addEventListener('DOMContentLoaded', () => {
+            const maximizeBtns = document.querySelectorAll('.maximize-btn');
+            maximizeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const card = btn.closest('.pdf-card');
+                    if (card) {
+                        // Clona o card para tela cheia (evita remover do original)
+                        const fullscreenCard = card.cloneNode(true);
+                        fullscreenCard.classList.add('pdf-fullscreen');
+                        document.body.appendChild(fullscreenCard);
+
+                        // Adiciona botão de fechar no clone
+                        const closeBtn = document.createElement('button');
+                        closeBtn.classList.add('close-btn');
+                        closeBtn.textContent = 'Fechar';
+                        closeBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            fullscreenCard.remove();
+                        });
+                        fullscreenCard.appendChild(closeBtn);
+
+                        // Ajusta o embed no clone
+                        const embed = fullscreenCard.querySelector('.pdf-embed');
+                        if (embed) {
+                            embed.style.height = 'calc(100vh - 100px)'; // Ajuste para caber título e botões
+                        }
+                    } else {
+                        console.error('Card não encontrado.');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
